@@ -1,0 +1,7 @@
+{
+    "DB_HOST": "__DB_HOST__",
+    "DB_PORT": "__DB_PORT__",
+    "DB_NAME": "__DB_NAME__",
+    "DB_USER": "__DB_USER__",
+    "DB_PASS": "__DB_PASS__"
+}
