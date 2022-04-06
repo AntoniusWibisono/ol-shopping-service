@@ -1,13 +1,12 @@
 
 module.exports = (databaseConfig, DataTypes) => {
-    databaseConfig.define('product_image', {
+    databaseConfig.define('product_record', {
         id: { primaryKey: true, autoIncrement: true, type: DataTypes.INTEGER },
-        name: DataTypes.STRING,
-        index: DataTypes.INTEGER,
-        url: DataTypes.STRING,
+        wishlist_count: DataTypes.INTEGER,
+        view_count: DataTypes.INTEGER,
         product_id: DataTypes.INTEGER
     }, {
-        tableName: 'product_image',
+        tableName: 'product_record',
         createdAt: 'created_at',
         updatedAt: 'updated_at',
         timestamps: true,

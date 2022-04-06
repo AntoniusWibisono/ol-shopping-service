@@ -1,5 +1,6 @@
 const config  = require('../../config');
 const Sequelize = require('sequelize');
+const { relationSetup } = require('./relation_setup');
 
 const databaseConfig = new Sequelize(
     config.get('DB_NAME'),
@@ -19,5 +20,18 @@ const databaseConfig = new Sequelize(
         }
     }
 );
+
+const modelDefiners = [
+    require('./product'),
+    require('./product_image'),
+    require('./product_record'),
+    require('./user')
+]
+
+for (const eachModel of modelDefiners) {
+    eachModel(databaseConfig, Sequelize.DataTypes);
+}
+
+relationSetup(databaseConfig);
 
 module.exports = databaseConfig;

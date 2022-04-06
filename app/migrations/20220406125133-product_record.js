@@ -2,21 +2,18 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => 
-    queryInterface.createTable('product_image', {
+    queryInterface.createTable('product_record', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING,
-      },
-      index: {
+      wishlist_count: {
         type: Sequelize.INTEGER,
       },
-      url: {
-        type: Sequelize.STRING,
+      view_count: {
+        type: Sequelize.INTEGER,
       },
       product_id: {
         type: Sequelize.INTEGER,
@@ -36,5 +33,5 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     }),
-  down: async (queryInterface, Sequelize) => queryInterface.dropTable('product_image')
+  down: async (queryInterface, Sequelize) => queryInterface.dropTable('product_record')
 };
