@@ -5,7 +5,8 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "sequelize db:migrate --config=app/configs/migration.js --migrations-path=app/migrations"
+    "migrate": "sequelize db:migrate --config=app/configs/migration.js --migrations-path=app/migrations",
+    "start": "node app/index.js"
   },
   "repository": {
     "type": "git",

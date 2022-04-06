@@ -6,17 +6,17 @@ const createUser = async (req, res) => {
         const result = await User.create({ name, email, password });
         return res.status(201).json({ result });
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
     }  
 };
 
 const getUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await User.findOne({ id })
+        const result = await User.findOne({ where: { id } })
         return res.status(200).json({ result });
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
     }
 }
 
