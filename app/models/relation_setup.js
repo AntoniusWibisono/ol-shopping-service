@@ -8,6 +8,9 @@ function relationSetup(sequelize) {
 
 	user.belongsToMany(product, { through: user_wishlist, foreignKey: 'user_id' });
 	product.belongsToMany(user, { through: user_wishlist, foreignKey: 'product_id' });
+
+	user_wishlist.belongsTo(user, { foreignKey: 'user_id' });
+	user_wishlist.belongsTo(product, { foreignKey: 'product_id' });
 }
 
 module.exports = { relationSetup };

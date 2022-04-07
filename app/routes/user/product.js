@@ -84,7 +84,45 @@ const addProductToWishList = async (req, res) => {
     }
 }
 
+const getWishListProduct = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const wishListResult = await models.user_wishlist.findAll({
+            where: {
+                user_id: userId
+            },
+            include: [
+                { model: models.user },
+                { model: models.product }
+            ]
+        });
+
+        return res.status(200).json({wishListResult});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+const deleteWishListProduct = async (req, res) => {
+    try {
+        const { userId, productId } = req.params;
+        await models.user_wishlist.destroy({
+            where: {
+                user_id: userId,
+                product_id: productId
+            }
+        });
+
+        return res.status(200).json({ message: 'wishlist product removed '});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = (router) => {
     router.get('/', getAllProduct);
-    router.post('/:productId/:userId', addProductToWishList);
+    router.post('/wishlist/:productId/:userId', addProductToWishList);
+    router.get('/wishlist/:userId', getWishListProduct);
+    router.delete('/wishlist/:productId/:userId', deleteWishListProduct);
 }
