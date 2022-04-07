@@ -18,7 +18,7 @@ features:
 - MySQL as a database.
 - Sequelize as ORM
 - Database Migration using Sequelize
-- Authentication with JWT and cookie
+- Authentication with JWT
 - REST API
 
 postman documentation:
