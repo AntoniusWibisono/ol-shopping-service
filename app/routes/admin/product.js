@@ -17,9 +17,16 @@ const createProduct = async (req,res) => {
         })
         const imageResult = await models.product_image.bulkCreate(bulkImageInput, { returning: true });
 
+        const recordResult = await models.product_record.create({
+            wishlist_count: 0,
+            view_count: 0,
+            product_id: id
+        });
+
         return res.status(201).json({
             product: productResult,
             productImage: imageResult,
+            productRecord: recordResult,
         })
 
     } catch (error) {

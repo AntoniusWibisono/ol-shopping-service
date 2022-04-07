@@ -25,7 +25,8 @@ const modelDefiners = [
     require('./product'),
     require('./product_image'),
     require('./product_record'),
-    require('./user')
+    require('./user'),
+    require('./user_wishlist')
 ]
 
 for (const eachModel of modelDefiners) {
