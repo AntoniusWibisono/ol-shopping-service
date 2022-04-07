@@ -1,4 +1,5 @@
 const { models } = require('../../models');
+const { validateAdmin } = require('../../middleware/authenticate')
 
 const createProduct = async (req,res) => {
     try {
@@ -119,6 +120,7 @@ const getHighestProductRecord = async (req, res) => {
 }
 
 module.exports = (router) => {
+    router.use(validateAdmin);
     router.post('/', createProduct);
     router.get('/highest/:counter', getHighestProductRecord);
     router.get('/:id', getProductById);

@@ -1,5 +1,6 @@
 const { Op, col, where } = require('sequelize');
 const { models } = require('../../models');
+const { validateAuth } = require('../../middleware/authenticate')
 
 
 const getAllProduct = async (req, res) => {
@@ -45,11 +46,12 @@ const getAllProduct = async (req, res) => {
 
 const addProductToWishList = async (req, res) => {
     try {
-        const { productId, userId } = req.params;
+        const { productId } = req.params;
+        const { user_id } = req.user;
 
         const checkUserWishlist = await models.user_wishlist.findOne({
             where: {
-                user_id: userId,
+                user_id,
                 product_id: productId,
             }
         })
@@ -57,7 +59,7 @@ const addProductToWishList = async (req, res) => {
         if (checkUserWishlist) throw new Error('User already wishlisted this product');
        
         await models.user_wishlist.create({
-            user_id: userId,
+            user_id,
             product_id: productId
         });
         
@@ -65,7 +67,7 @@ const addProductToWishList = async (req, res) => {
 
         const result = await models.user.findOne({
             where: {
-                id: userId
+                id: user_id
             },
             include: [
                 {
@@ -86,11 +88,11 @@ const addProductToWishList = async (req, res) => {
 
 const getWishListProduct = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { user_id } = req.user;
 
         const wishListResult = await models.user_wishlist.findAll({
             where: {
-                user_id: userId
+                user_id
             },
             include: [
                 { model: models.user },
@@ -106,13 +108,16 @@ const getWishListProduct = async (req, res) => {
 
 const deleteWishListProduct = async (req, res) => {
     try {
-        const { userId, productId } = req.params;
+        const { productId } = req.params;
+        const { user_id } = req.user;
         await models.user_wishlist.destroy({
             where: {
-                user_id: userId,
+                user_id,
                 product_id: productId
             }
         });
+
+        await models.product_record.increment({wishlist_count: -1}, { where: { product_id: productId }});
 
         return res.status(200).json({ message: 'wishlist product removed '});
     } catch (error) {
@@ -120,9 +125,33 @@ const deleteWishListProduct = async (req, res) => {
     }
 }
 
+const getDetailProduct = async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        const { productId } = req.params;
+
+        const productDetail = await models.product.findOne({
+            where: {
+                id: productId
+            },
+            include: [
+                { model: models.product_image },
+                { model: models.product_record }
+            ],
+        });
+
+        await models.product_record.increment({view_count: 1}, { where: { product_id: productId }});
+
+        return res.status(200).json({productDetail});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = (router) => {
     router.get('/', getAllProduct);
-    router.post('/wishlist/:productId/:userId', addProductToWishList);
-    router.get('/wishlist/:userId', getWishListProduct);
-    router.delete('/wishlist/:productId/:userId', deleteWishListProduct);
+    router.get('/detail/:productId', validateAuth, getDetailProduct);
+    router.post('/wishlist/:productId', validateAuth, addProductToWishList);
+    router.get('/wishlist', validateAuth, getWishListProduct);
+    router.delete('/wishlist/:productId',validateAuth, deleteWishListProduct);
 }
